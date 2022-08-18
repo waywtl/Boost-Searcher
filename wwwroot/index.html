@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+    <title>boost 搜索引擎</title>
+    <style>
+        /* 去掉网页中的所有默认内外边距，html的盒子模型 */
+        *{
+            /* 设置外边距 */
+            margin: 0;
+            /* 设置内边距 */
+            padding: 0;
+        }
+        /* 将我们的body内的内容100%和html的呈现吻合 */
+        html,
+        body
+        {
+            height: 100%;
+        }
+        /* 类选择器.container */
+        .container
+        {
+            /* 设置div的宽度 */
+            width: 800px;
+            /* 通过设置外边距达到居中对齐的目的 */
+            margin: 0px auto;
+            /* 设置外边距的上边距，保持元素和网页的上部距离 */
+            margin-top: 15px;
+        }
+        .container .search
+        {
+            /* 宽度与父标签保持一致 */
+            width: 100%;
+            /* 高度设置为52px */
+            height: 52px;
+        }
+        /* 先选中input标签，直接设置标签的属性，先要选中，input: 标签选择器 */
+        /* input在进行高度设置的时候，没有考虑边框的问题 */
+        .container .search input
+        {
+            /* 设置left浮动 */
+            float: left;
+            width: 600px;
+            height: 50px;
+            /* 设置边框属性：边框的宽度，样式，颜色 */
+            border: 2px solid #4e6ef2;
+            /* 去掉input输入框的右边框 */
+            border-right: none;
+            /* 设置内边距，默认文字不要和左侧边框紧挨着 */
+            padding-left: 10px;
+            /* 设置input内部的字体的颜色和样式 */
+            color: black;
+            font-size: 15px;
+
+        }
+        /* 先选中button标签，直接设置标签的属性，先要选中，button: 标签选择器 */
+        .container .search button
+        {
+            /* 设置left浮动 */
+            float: left;
+            width: 120px;
+            height: 54px;
+            /* 设置button的背景颜色， #4e6ef2 */
+            background-color: #4e6ef2;
+            /* 设置button中字体的颜色 */
+            color: #FFF;
+            /* 设置字体的大小 */
+            font-size: 19px;
+            font-family:'Times New Roman', Times, serif;
+
+            border: 1px solid #4e6ef2;
+        }
+        .container result
+        {
+            width: 100%;
+        }
+        .container .result .item
+        {
+            margin-top: 15px;
+        }
+        .container .result .item a
+        {
+            /* 设置a为块级元素，单独占一行 */
+            display: block;
+            /* a标签的下划线去掉 */
+            text-decoration: none;
+            /* 设置a标签中的文字的字体大小 */
+            font-size: 20px;
+            /* 设置字体的颜色 */
+            color: #4e6ef2;
+        }
+        .container .result .item a:hover
+        {
+            text-decoration: underline;
+        }
+        .container .result .item p
+        {
+            margin-top: 5px;
+            font-size: 16px;
+            font-family:'Times New Roman', Times, serif;
+        }
+        .container .result .item i
+        {
+            /* 设置i为块级元素，单独占一行 */
+            display: block;
+            /* 取消斜体风格 */
+            font-style: normal;
+            color:rgb(247, 96, 121);
+        }
+        
+        .container .search button:hover
+        {
+            background: #2d55f7;
+        }
+
+        .container .search .btn-search
+        {
+            /* 鼠标事件颜色渐变的时间 */
+             transition-duration: 0.3s;
+             /* 鼠标悬停时变成手指 */
+             cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="search">
+            <input type="text" value="">
+            <button class="btn-search" onclick="Search()">搜索一下</button>
+        </div>
+        <div class="result">
+            <!-- 动态生成网页内容 -->
+            <!-- <div class="item">
+                <a href="#">这是标题</a>
+                <p>这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要</p>
+                <i>https://www.boost.org/doc/libs/1_79_0/doc/html/boost/algorithm/split_regex.html</i>
+            </div>
+            <div class="item">
+                <a href="#">这是标题</a>
+                <p>这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要</p>
+                <i>https://www.boost.org/doc/libs/1_79_0/doc/html/boost/algorithm/split_regex.html</i>
+            </div>
+            <div class="item">
+                <a href="#">这是标题</a>
+                <p>这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要</p>
+                <i>https://www.boost.org/doc/libs/1_79_0/doc/html/boost/algorithm/split_regex.html</i>
+            </div>
+            <div class="item">
+                <a href="#">这是标题</a>
+                <p>这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要</p>
+                <i>https://www.boost.org/doc/libs/1_79_0/doc/html/boost/algorithm/split_regex.html</i>
+            </div>
+            <div class="item">
+                <a href="#">这是标题</a>
+                <p>这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要这是摘要</p>
+                <i>https://www.boost.org/doc/libs/1_79_0/doc/html/boost/algorithm/split_regex.html</i>
+            </div> -->
+        </div>
+    </div>
+    <script>
+        function Search()
+        {
+            // 是浏览器的一个弹出框
+            // alert("hello js!");
+            // 1.提取数据，$可以理解成就是JQuery的别称
+            let query = $(".container .search input").val();
+            if(query == "" || query == null)
+            {
+                return;
+            }
+            console.log("query = " + query);//console是浏览器的对话框，可以用来进行查看js数据
+            
+            // 2.发起http请求,ajax: 属于一个和后端进行数据交互的函数，JQuery中的
+            $.ajax({
+                type: "GET",
+                url: "/s?word=" + query,
+                success:function(data)
+                {
+                    console.log(data);
+                    BuildHtml(data);
+                }
+            });
+        }
+
+        function BuildHtml(data)
+        {
+            if(data == "" || data == null)
+            {
+                document.write("当前搜索内容无效");
+                return;
+            }
+            // 获取html中的result标签
+            let result_lable = $(".container .result");
+            // 清空历史搜索结果
+            result_lable.empty();
+
+            for( let elem of data)
+            {
+                console.log(elem.title);
+                console.log(elem.url);
+                let a_lable = $("<a>", 
+                {
+                    text: elem.title,
+                    href: elem.url,
+                    // 跳转倒新的页面
+                    target: "_blank"
+                });
+                let p_lable = $("<p>", 
+                {
+                    text: elem.desc
+                });
+                let i_lable = $("<i>", 
+                {
+                    text: elem.url
+                });
+                let div_lable = $("<div>", 
+                {
+                    class: "item"
+                });
+                a_lable.appendTo(div_lable);
+                p_lable.appendTo(div_lable);
+                i_lable.appendTo(div_lable);
+                div_lable.appendTo(result_lable);
+            }
+        }
+    </script>
+</body>
+</html>
